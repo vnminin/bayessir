@@ -1,0 +1,25 @@
+\name{dataLik}
+\alias{dataLik}
+\title{Probability of observed data}
+\usage{
+dataLik(infected, observed, repRate, givelog)
+}
+\arguments{
+  \item{infected}{Number of infected individuals}
+
+  \item{observed}{Number of observed individuals}
+
+  \item{repRate}{probability of infected individuals
+  seeking treatment}
+
+  \item{givelog}{boolian; if 1, returns log}
+}
+\value{
+Probability of observed data
+}
+\description{
+Calculates the probability of the observed data given the
+latent states and the parameters, assuming the number of
+observed infections has a binomial distribution
+}
+
