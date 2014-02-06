@@ -205,7 +205,8 @@ bayessir=function(obscholLIST,obsdaysLIST,COVMATLIST,
                   deltavalue,critical,PopSize,theMU,
                   numParticles,resultspath){
   
-  
+  ## Vladimir's fake comment
+
   pacc=ptot=acc=tot=0
   
   transth<-trans(th)
