@@ -71,7 +71,7 @@ int sampleOnce(NumericVector weights) {
 //' @param popSize Population size
 //' @param startTime Start time of simulation
 //' @param intervalLength Length of simulation interval 
-//' @param parameters Numeric vector of size three containing the current values of the infectious contact rate, the recovery rate, and the rate at which immunity is lost, respectively
+//' @param parameters Numeric vector of size seven containing the current values of the infectious contact rate, the recovery rate, the rate at which immunity is lost, and the powers
 //' @param alphas Numeric vector containing the values of alpha
 //' @param allbreaks Numeric vector containing the times at which the value of alpha changes
 //' @return Vector containing number of susceptible and infected at the end of the simulation interval 
@@ -100,7 +100,8 @@ IntegerVector inhomoSIRSGillespie(IntegerVector startState, int popSize,
 
     while(curTime < endTime){
 
-    	h1 = parameters[0]*curState[0]*curState[1] + currentalpha*curState[0];
+      h1 = parameters[0]*pow(curState[1],parameters[3])*pow(curState[0],parameters[4]) + 
+            exp(parameters[5]*curState[1])*pow(curState[1],parameters[6])*curState[0]*currentalpha;
 	    h2 = parameters[1]*curState[1];
 	    h3 = parameters[2]*(popSize - curState[0] - curState[1]);
 	    h0 = h1 + h2 + h3;
@@ -150,7 +151,7 @@ IntegerVector inhomoSIRSGillespie(IntegerVector startState, int popSize,
 //' @param popSize Population size
 //' @param startTime Start time of simulation
 //' @param intervalLength Length of simulation interval 
-//' @param parameters Numeric vector of size three containing the current values of the infectious contact rate, the recovery rate, and the rate at which immunity is lost, respectively
+//' @param parameters Numeric vector of size seven containing the current values of the infectious contact rate, the recovery rate, the rate at which immunity is lost, and the powers
 //' @param alphas Numeric vector containing the values of alpha
 //' @param allbreaks Numeric vector containing the times at which the value of alpha changes
 //' @param deltatint Initial value to use for tau in tau-leaping algorithm
@@ -194,7 +195,8 @@ IntegerVector inhomoModPoissonTL(IntegerVector startState, int popSize,
 
 	if(curState[1]<ncrit || curState[0]<ncrit || (popSize-curState[0]-curState[1])<ncrit){
 	    
-	    h[0] = parameters[0]*curState[0]*curState[1] + currentalpha*curState[0];
+      h[0] = parameters[0]*pow(curState[1],parameters[3])*pow(curState[0],parameters[4]) + 
+        exp(parameters[5]*curState[1])*pow(curState[1],parameters[6])*curState[0]*currentalpha;
 	    h[1] = parameters[1]*curState[1];
 	    h[2] = parameters[2]*(popSize-curState[0]-curState[1]);
 
@@ -231,8 +233,8 @@ IntegerVector inhomoModPoissonTL(IntegerVector startState, int popSize,
 		deltat = deltatint;
 	    }
 
-	    transition[0] = as<int>(rpois(1, (parameters[0]*curState[0]*curState[1] + 
-					      currentalpha*curState[0])*deltat));
+	    transition[0] = as<int>(rpois(1, (parameters[0]*pow(curState[1],parameters[3])*pow(curState[0],parameters[4]) + 
+          exp(parameters[5]*curState[1])*pow(curState[1],parameters[6])*curState[0]*currentalpha)*deltat));
 	    transition[1] = as<int>(rpois(1, (parameters[1]*curState[1])*deltat));
 	    transition[2] = as<int>(rpois(1, (parameters[2]*(popSize-curState[0]-curState[1]))*deltat));
 
@@ -275,9 +277,9 @@ IntegerVector inhomoModPoissonTL(IntegerVector startState, int popSize,
 		    ((popSize-curState[0]-curState[1]+transition[1]-transition[2])<0)){
 
 		    deltat = deltat/2;
-		    
-		    transition[0] = as<int>(rpois(1, (parameters[0]*curState[0]*curState[1] + 
-						      currentalpha*curState[0])*deltat));
+        
+		    transition[0] = as<int>(rpois(1, (parameters[0]*pow(curState[1],parameters[3])*pow(curState[0],parameters[4]) + 
+          exp(parameters[5]*curState[1])*pow(curState[1],parameters[6])*curState[0]*currentalpha)*deltat));
 		    transition[1] = as<int>(rpois(1, (parameters[1]*curState[1])*deltat));
 		    transition[2] = as<int>(rpois(1, (parameters[2]*(popSize-curState[0]-curState[1]))*deltat));
 
@@ -325,7 +327,7 @@ IntegerVector inhomoModPoissonTL(IntegerVector startState, int popSize,
 //' @param popSize Population size
 //' @param startTime Start time of simulation
 //' @param intervalLength Length of simulation interval 
-//' @param parameters Numeric vector of size three containing the current values of the infectious contact rate, the recovery rate, and the rate at which immunity is lost, respectively
+//' @param parameters parameters Numeric vector of size seven containing the current values of the infectious contact rate, the recovery rate, the rate at which immunity is lost, and the powers
 //' @param alpha The value of the time-varying environmental force of infection
 //' @param deltatint Initial value to use for tau in tau-leaping algorithm
 //' @param ncrit Critical number
@@ -352,7 +354,8 @@ IntegerVector ModPoissonTL(IntegerVector startState, int popSize,
     while(curTime - endTime < -deltatint/100){
 	if(curState[1]<ncrit || curState[0]<ncrit || (popSize-curState[0]-curState[1])<ncrit){
 
-	    h[0] = parameters[0]*curState[0]*curState[1] + alpha*curState[0];
+	    h[0] = parameters[0]*pow(curState[1],parameters[3])*pow(curState[0],parameters[4]) + 
+        exp(parameters[5]*curState[1])*pow(curState[1],parameters[6])*curState[0]*alpha;
 	    h[1] = parameters[1]*curState[1];
 	    h[2] = parameters[2]*(popSize-curState[0]-curState[1]);
 
@@ -389,8 +392,8 @@ IntegerVector ModPoissonTL(IntegerVector startState, int popSize,
 	     	deltat = deltatint;
 	    }
 
-	    transition[0] = as<int>(rpois(1, (parameters[0]*curState[0]*curState[1] + 
-					      alpha*curState[0])*deltat));
+	    transition[0] = as<int>(rpois(1, (parameters[0]*pow(curState[1],parameters[3])*pow(curState[0],parameters[4]) + 
+        exp(parameters[5]*curState[1])*pow(curState[1],parameters[6])*curState[0]*alpha)*deltat));
 	    transition[1] = as<int>(rpois(1, (parameters[1]*curState[1])*deltat));
 	    transition[2] = as<int>(rpois(1, (parameters[2]*(popSize-curState[0]-curState[1]))*deltat));
 	    
@@ -418,9 +421,9 @@ IntegerVector ModPoissonTL(IntegerVector startState, int popSize,
 		    ((popSize-curState[0]-curState[1]+transition[1]-transition[2])<0)){
 
 		    deltat=deltat/2;
-		    
-		    transition[0] = as<int>(rpois(1, (parameters[0]*curState[0]*curState[1] + 
-						      alpha*curState[0])*deltat));
+
+		    transition[0] = as<int>(rpois(1, (parameters[0]*pow(curState[1],parameters[3])*pow(curState[0],parameters[4]) + 
+          exp(parameters[5]*curState[1])*pow(curState[1],parameters[6])*curState[0]*alpha)*deltat));
 		    transition[1] = as<int>(rpois(1, (parameters[1]*curState[1])*deltat));
 		    transition[2] = as<int>(rpois(1, (parameters[2]*(popSize-curState[0]-curState[1]))*deltat));
 		}
@@ -441,7 +444,7 @@ IntegerVector ModPoissonTL(IntegerVector startState, int popSize,
 //' 
 //' @param observedCounts Integer vector of observed counts
 //' @param observedTimes Numeric vector of observation times
-//' @param parameters Numeric vector of size three containing the current values of the infectious contact rate, the recovery rate, and the rate at which immunity is lost, respectively
+//' @param parameters Numeric vector of size seven containing the current values of the infectious contact rate, the recovery rate, the rate at which immunity is lost, and the powers
 //' @param alphaBreaks List containing the time-varying environmental force of infection and the times at which the rate changes, broken up by simulation intervals
 //' @param startMeans Numeric vector of size two containing the means of initial distributions for the numbers of susceptible and infected individuals respectively
 //' @param nparticles Number of particles 

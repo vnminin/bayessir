@@ -28,6 +28,10 @@ enviforce=function(covs, obsDates, alphaPars){
 }
 
 prior.fun<-function(param,priorMean,priorSD){
+#   priorMean=priorMean[-c(which(is.na(param)))]
+#   priorSD=priorSD[-c(which(is.na(param)))]
+#   param=param[-c(which(is.na(param)))]
+  
   priors<-rep(NA,length(param))
   
   for(i in 1:length(param)){

@@ -16,10 +16,10 @@ inhomoSIRSGillespie(startState, popSize, startTime, intervalLength, parameters,
 
   \item{intervalLength}{Length of simulation interval}
 
-  \item{parameters}{Numeric vector of size three containing
+  \item{parameters}{Numeric vector of size seven containing
   the current values of the infectious contact rate, the
-  recovery rate, and the rate at which immunity is lost,
-  respectively}
+  recovery rate, the rate at which immunity is lost, and
+  the powers}
 
   \item{alphas}{Numeric vector containing the values of
   alpha}

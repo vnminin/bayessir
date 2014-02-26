@@ -3,9 +3,9 @@
 \title{PMMH algorithm for time-varying SIRS model}
 \usage{
 bayessir(obscholLIST, obsdaysLIST, COVMATLIST, th, trans, invtrans, pmean, psd,
-  constParIndex, alphasIndex, rhoIndex, startmeansIndex, burn, prelim, iters,
-  thin, tune, ll, psigma, deltavalue, critical, PopSize, theMU, numParticles,
-  resultspath)
+  constParIndex, alphasIndex, rhoIndex, startmeansIndex, nu1Index, nu2Index,
+  nu3Index, nu4Index, burn, prelim, iters, thin, tune, ll, psigma, deltavalue,
+  critical, PopSize, theMU, numParticles, resultspath)
 }
 \arguments{
   \item{obscholLIST}{List containing the cholera counts for
@@ -42,6 +42,18 @@ bayessir(obscholLIST, obsdaysLIST, COVMATLIST, th, trans, invtrans, pmean, psd,
   correspond to means of initial distributions for the
   numbers of susceptible and infected individuals
   respectively}
+
+  \item{nu1Index}{Index of which \code{th} value
+  corresponds to \eqn{\nu_1} power}
+
+  \item{nu2Index}{Index of which \code{th} value
+  corresponds to \eqn{\nu_2} power}
+
+  \item{nu3Index}{Index of which \code{th} value
+  corresponds to \eqn{\nu_3} power}
+
+  \item{nu4Index}{Index of which \code{th} value
+  corresponds to \eqn{\nu_4} power}
 
   \item{burn}{Number of iterations for burn-in run}
 
@@ -136,6 +148,8 @@ th1=1.25e-08
 th2=0.1
 rho=.0008
 
+nus=c(1,1,0,0)
+
 set.seed(10)
 sus0=rpois(1,phiS)
 inf0=rpois(1,phiI)
@@ -150,7 +164,7 @@ simstates[1,]<-shortstart
 
 for (i in 2:length(SimTimes)){
   simstates[i,]<-inhomoSIRSGillespie(simstates[i-1,],pop,SimTimes[i-1],SimTimes[i]-SimTimes[i-1],
-                                    c(th1,th2,theMU),allcovs[[i-1]][,2],allcovs[[i-1]][,1])
+                                    c(th1,th2,theMU,nus),allcovs[[i-1]][,2],allcovs[[i-1]][,1])
 }
 
 SimData<-c()
@@ -241,7 +255,7 @@ ll=-50000
 
 
 bayessirOUT=bayessir(obscholLIST,obsdaysLIST,COVMATLIST,
-                     th,trans,invtrans,pmean,psd,constParIndex,alphasIndex,rhoIndex,startmeansIndex,
+                     th,trans,invtrans,pmean,psd,constParIndex,alphasIndex,rhoIndex,startmeansIndex,NA,NA,NA,NA,
                      burn,prelim,iters,thin,tune,ll,psigma,
                      deltavalue,critical,PopSize,theMU,numParticles,resultspath)
 
