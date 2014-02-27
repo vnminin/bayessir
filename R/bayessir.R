@@ -11,6 +11,10 @@
 #' @param alphasIndex Index of which \code{th} values correspond to \eqn{\alpha} parameters
 #' @param rhoIndex Index of which \code{th} values correspond to \eqn{\rho}, the probability of infected individuals seeking treatment
 #' @param startmeansIndex Index of which \code{th} values correspond to means of initial distributions for the numbers of susceptible and infected individuals respectively
+#' @param nu1Index Index of which \code{th} value corresponds to \eqn{\nu_1} power
+#' @param nu2Index Index of which \code{th} value corresponds to \eqn{\nu_2} power
+#' @param nu3Index Index of which \code{th} value corresponds to \eqn{\nu_3} power
+#' @param nu4Index Index of which \code{th} value corresponds to \eqn{\nu_4} power
 #' @param burn Number of iterations for burn-in run
 #' @param prelim Number of total iterations for preliminary run, preliminary run = burn-in run + secondary run
 #' @param iters Number of iterations for final run
@@ -75,6 +79,8 @@
 #' th2=0.1
 #' rho=.0008
 #' 
+#' nus=c(1,1,0,0)
+#' 
 #' set.seed(10)
 #' sus0=rpois(1,phiS)
 #' inf0=rpois(1,phiI)
@@ -89,7 +95,7 @@
 #' 
 #' for (i in 2:length(SimTimes)){
 #'   simstates[i,]<-inhomoSIRSGillespie(simstates[i-1,],pop,SimTimes[i-1],SimTimes[i]-SimTimes[i-1],
-#'                                     c(th1,th2,theMU),allcovs[[i-1]][,2],allcovs[[i-1]][,1])
+#'                                     c(th1,th2,theMU,nus),allcovs[[i-1]][,2],allcovs[[i-1]][,1])
 #' }
 #' 
 #' SimData<-c()
@@ -180,7 +186,7 @@
 #' 
 #' 
 #' bayessirOUT=bayessir(obscholLIST,obsdaysLIST,COVMATLIST,
-#'                      th,trans,invtrans,pmean,psd,constParIndex,alphasIndex,rhoIndex,startmeansIndex,
+#'                      th,trans,invtrans,pmean,psd,constParIndex,alphasIndex,rhoIndex,startmeansIndex,NA,NA,NA,NA,
 #'                      burn,prelim,iters,thin,tune,ll,psigma,
 #'                      deltavalue,critical,PopSize,theMU,numParticles,resultspath)
 #' 
@@ -199,14 +205,12 @@
 bayessir=function(obscholLIST,obsdaysLIST,COVMATLIST,
                   th,trans,invtrans,
                   pmean,psd,
-                  constParIndex,alphasIndex,rhoIndex,startmeansIndex,
+                  constParIndex,alphasIndex,rhoIndex,startmeansIndex,nu1Index,nu2Index,nu3Index,nu4Index,
                   burn,prelim,iters,thin,tune,
                   ll,psigma,
                   deltavalue,critical,PopSize,theMU,
                   numParticles,resultspath){
   
-  ## Vladimir's fake comment
-
   pacc=ptot=acc=tot=0
   
   transth<-trans(th)
@@ -223,6 +227,12 @@ bayessir=function(obscholLIST,obsdaysLIST,COVMATLIST,
   transthmat=matrix(0,nrow=iters,ncol=p)
   colnames(transthmat)=c(names(th),"ll","susT","infT")
   
+  ##############
+#   psigma=psigma[1:length(th)]
+#   pmean=pmean[1:length(th)]
+#   psd=psd[1:length(th)]
+  
+  ##############
   
   begTime <- Sys.time()
   
@@ -242,11 +252,47 @@ bayessir=function(obscholLIST,obsdaysLIST,COVMATLIST,
       transthprop=rmvnorm(1,transth,psigma)
       thprop=invtrans(transthprop) 
       
+      ##fix nu parameters
+      
+      if(is.na(nu1Index)){
+        nu1prop=1
+      }else{
+        nu1prop=thprop[nu1Index]
+      }
+      
+      if(is.na(nu2Index)){
+        nu2prop=1
+      }else{
+        nu2prop=thprop[nu2Index]
+      }
+
+      if(is.na(nu3Index)){
+        nu3prop=0
+      }else{
+        nu3prop=thprop[nu3Index]
+      }
+      
+      if(is.na(nu4Index)){
+        nu4prop=0
+      }else{
+        nu4prop=thprop[nu4Index]
+      }
+      
+      if(i==1) print(c(nu1prop,nu2prop,nu3prop,nu4prop))
+# #       if(sum(is.na(thprop))>0) thprop[which(is.na(thprop))]=1
+#       if(is.na(powerIndex)){
+#         nu1prop=1
+#       }else{
+#         nu1prop=thprop[powerIndex]
+#       }
+
+#       if(sum(is.na(thprop))>0) thprop[which(is.na(thprop))]=1
+
       NumberOfPhases=length(COVMATLIST)
       llprops=rep(NA,NumberOfPhases)
       for(z in 1:NumberOfPhases){
         alphaBreakList<-enviforce(COVMATLIST[[z]],obsdaysLIST[[z]],thprop[alphasIndex])
-        pf=SMCwithModPossionTL(obscholLIST[[z]],obsdaysLIST[[z]],c(thprop[constParIndex],theMU),alphaBreakList,
+        pf=SMCwithModPossionTL(obscholLIST[[z]],obsdaysLIST[[z]],c(thprop[constParIndex],theMU,nu1prop,nu2prop,nu3prop,nu4prop),alphaBreakList,
                                 thprop[startmeansIndex],numParticles,PopSize,thprop[rhoIndex],deltavalue,critical)    
         llprops[z]=pf$ll       
       }
@@ -255,8 +301,8 @@ bayessir=function(obscholLIST,obsdaysLIST,COVMATLIST,
       
       lastxprop=pf$lastX #only need to save the last state of the last phase
         
-      if (log(runif(1)) < llprop - ll + prior.fun(transthprop,pmean,psd) - prior.fun(transth,pmean,psd) +
-            dmvnorm(transth,transthprop,psigma,log=T) - dmvnorm(transthprop,transth,psigma,log=T)) {
+      if (log(runif(1)) < llprop - ll + prior.fun(transthprop,pmean,psd) - prior.fun(transth,pmean,psd)){
+#             +dmvnorm(transth,transthprop,psigma,log=T) - dmvnorm(transthprop,transth,psigma,log=T)) {
         transth=transthprop
         th=thprop
         ll=llprop
@@ -291,11 +337,37 @@ bayessir=function(obscholLIST,obsdaysLIST,COVMATLIST,
       transthprop=rmvnorm(1,transth,tune*ssigma,method="svd")    
       thprop=invtrans(transthprop) 
       
+      if(is.na(nu1Index)){
+        nu1prop=1
+      }else{
+        nu1prop=thprop[nu1Index]
+      }
+      
+      if(is.na(nu2Index)){
+        nu2prop=1
+      }else{
+        nu2prop=thprop[nu2Index]
+      }
+      
+      if(is.na(nu3Index)){
+        nu3prop=0
+      }else{
+        nu3prop=thprop[nu3Index]
+      }
+      
+      if(is.na(nu4Index)){
+        nu4prop=0
+      }else{
+        nu4prop=thprop[nu4Index]
+      }
+      
+#       if(sum(is.na(thprop))>0) thprop[which(is.na(thprop))]=1
+      
       NumberOfPhases=length(COVMATLIST)
       llprops=rep(NA,NumberOfPhases)
       for(z in 1:NumberOfPhases){
         alphaBreakList<-enviforce(COVMATLIST[[z]],obsdaysLIST[[z]],thprop[alphasIndex])
-        pf=SMCwithModPossionTL(obscholLIST[[z]],obsdaysLIST[[z]],c(thprop[constParIndex],theMU),alphaBreakList,
+        pf=SMCwithModPossionTL(obscholLIST[[z]],obsdaysLIST[[z]],c(thprop[constParIndex],theMU,nu1prop,nu2prop,nu3prop,nu4prop),alphaBreakList,
                                thprop[startmeansIndex],numParticles,PopSize,thprop[rhoIndex],deltavalue,critical)    
         llprops[z]=pf$ll       
       }

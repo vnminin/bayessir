@@ -10,10 +10,10 @@ SMCwithModPossionTL(observedCounts, observedTimes, parameters, alphaBreaks,
 
   \item{observedTimes}{Numeric vector of observation times}
 
-  \item{parameters}{Numeric vector of size three containing
+  \item{parameters}{Numeric vector of size seven containing
   the current values of the infectious contact rate, the
-  recovery rate, and the rate at which immunity is lost,
-  respectively}
+  recovery rate, the rate at which immunity is lost, and
+  the powers}
 
   \item{alphaBreaks}{List containing the time-varying
   environmental force of infection and the times at which

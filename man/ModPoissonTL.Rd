@@ -16,10 +16,10 @@ ModPoissonTL(startState, popSize, startTime, intervalLength, parameters, alpha,
 
   \item{intervalLength}{Length of simulation interval}
 
-  \item{parameters}{Numeric vector of size three containing
-  the current values of the infectious contact rate, the
-  recovery rate, and the rate at which immunity is lost,
-  respectively}
+  \item{parameters}{parameters Numeric vector of size seven
+  containing the current values of the infectious contact
+  rate, the recovery rate, the rate at which immunity is
+  lost, and the powers}
 
   \item{alpha}{The value of the time-varying environmental
   force of infection}

@@ -40,7 +40,7 @@ sampleOnce <- function(weights) {
 #' @param popSize Population size
 #' @param startTime Start time of simulation
 #' @param intervalLength Length of simulation interval 
-#' @param parameters Numeric vector of size three containing the current values of the infectious contact rate, the recovery rate, and the rate at which immunity is lost, respectively
+#' @param parameters Numeric vector of size seven containing the current values of the infectious contact rate, the recovery rate, the rate at which immunity is lost, and the powers
 #' @param alphas Numeric vector containing the values of alpha
 #' @param allbreaks Numeric vector containing the times at which the value of alpha changes
 #' @return Vector containing number of susceptible and infected at the end of the simulation interval 
@@ -56,7 +56,7 @@ inhomoSIRSGillespie <- function(startState, popSize, startTime, intervalLength, 
 #' @param popSize Population size
 #' @param startTime Start time of simulation
 #' @param intervalLength Length of simulation interval 
-#' @param parameters Numeric vector of size three containing the current values of the infectious contact rate, the recovery rate, and the rate at which immunity is lost, respectively
+#' @param parameters Numeric vector of size seven containing the current values of the infectious contact rate, the recovery rate, the rate at which immunity is lost, and the powers
 #' @param alphas Numeric vector containing the values of alpha
 #' @param allbreaks Numeric vector containing the times at which the value of alpha changes
 #' @param deltatint Initial value to use for tau in tau-leaping algorithm
@@ -74,7 +74,7 @@ inhomoModPoissonTL <- function(startState, popSize, startTime, intervalLength, p
 #' @param popSize Population size
 #' @param startTime Start time of simulation
 #' @param intervalLength Length of simulation interval 
-#' @param parameters Numeric vector of size three containing the current values of the infectious contact rate, the recovery rate, and the rate at which immunity is lost, respectively
+#' @param parameters parameters Numeric vector of size seven containing the current values of the infectious contact rate, the recovery rate, the rate at which immunity is lost, and the powers
 #' @param alpha The value of the time-varying environmental force of infection
 #' @param deltatint Initial value to use for tau in tau-leaping algorithm
 #' @param ncrit Critical number
@@ -89,7 +89,7 @@ ModPoissonTL <- function(startState, popSize, startTime, intervalLength, paramet
 #' 
 #' @param observedCounts Integer vector of observed counts
 #' @param observedTimes Numeric vector of observation times
-#' @param parameters Numeric vector of size three containing the current values of the infectious contact rate, the recovery rate, and the rate at which immunity is lost, respectively
+#' @param parameters Numeric vector of size seven containing the current values of the infectious contact rate, the recovery rate, the rate at which immunity is lost, and the powers
 #' @param alphaBreaks List containing the time-varying environmental force of infection and the times at which the rate changes, broken up by simulation intervals
 #' @param startMeans Numeric vector of size two containing the means of initial distributions for the numbers of susceptible and infected individuals respectively
 #' @param nparticles Number of particles 
