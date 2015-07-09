@@ -12,6 +12,17 @@ simInit <- function(n, startState) {
     .Call('bayessir_simInit', PACKAGE = 'bayessir', n, startState)
 }
 
+#' Sample from initial distributions for SIWR
+#' 
+#' Simulates the initial number of susceptible and infected individuals from independent Poisson initial distributions.  
+#' @param n Number of particles 
+#' @param startState Numeric vector of size two containing the means of initial distributions for the numbers of susceptible and infected individuals respectively
+#' @return Matrix of dimension n by 2, where each row is the initial state for a particle trajectory
+#' @export
+simInitSIWR <- function(n, startState) {
+    .Call('bayessir_simInitSIWR', PACKAGE = 'bayessir', n, startState)
+}
+
 #' Probability of observed data
 #' 
 #' Calculates the probability of the observed data given the latent states and the parameters, assuming the number of observed infections has a binomial distribution 
@@ -33,6 +44,10 @@ sampleOnce <- function(weights) {
     .Call('bayessir_sampleOnce', PACKAGE = 'bayessir', weights)
 }
 
+SIRSGillespie <- function(startState, popSize, startTime, intervalLength, parameters, alphas) {
+    .Call('bayessir_SIRSGillespie', PACKAGE = 'bayessir', startState, popSize, startTime, intervalLength, parameters, alphas)
+}
+
 #' Modified inhomogeneous Gillespie algorithm 
 #' 
 #' Uses a modified Gillespie algorithm to simulate the numbers of susceptible and infected individuals forward in time when value of environmental force of infection changes
@@ -47,6 +62,14 @@ sampleOnce <- function(weights) {
 #' @export
 inhomoSIRSGillespie <- function(startState, popSize, startTime, intervalLength, parameters, alphas, allbreaks) {
     .Call('bayessir_inhomoSIRSGillespie', PACKAGE = 'bayessir', startState, popSize, startTime, intervalLength, parameters, alphas, allbreaks)
+}
+
+SIWRGillespie <- function(startState, popSize, Wmax, startTime, intervalLength, parameters, alphas) {
+    .Call('bayessir_SIWRGillespie', PACKAGE = 'bayessir', startState, popSize, Wmax, startTime, intervalLength, parameters, alphas)
+}
+
+inhomoSIWRSGillespie <- function(startState, popSize, Wmax, startTime, intervalLength, parameters, alphas, allbreaks) {
+    .Call('bayessir_inhomoSIWRSGillespie', PACKAGE = 'bayessir', startState, popSize, Wmax, startTime, intervalLength, parameters, alphas, allbreaks)
 }
 
 #' Modified inhomogeneous Poisson tau-leaping algorithm 
@@ -84,6 +107,41 @@ ModPoissonTL <- function(startState, popSize, startTime, intervalLength, paramet
     .Call('bayessir_ModPoissonTL', PACKAGE = 'bayessir', startState, popSize, startTime, intervalLength, parameters, alpha, deltatint, ncrit)
 }
 
+#' Modified inhomogeneous Poisson tau-leaping algorithm for SIWR model
+#' 
+#' Uses a tau-leaping algorithm to simulate S, I, W, and R forward in time when value of environmental force of infection changes
+#' @param startState Integer vector of size three containing the initial values for S, I, and W
+#' @param popSize Population size
+#' @param startTime Start time of simulation
+#' @param intervalLength Length of simulation interval 
+#' @param parameters Numeric vector of size six containing the current values of the infectious contact rate, betaW, the recovery rate, the rate at which immunity is lost, kappa, and eta
+#' @param alphas Numeric vector containing the values of alpha
+#' @param allbreaks Numeric vector containing the times at which the value of alpha changes
+#' @param deltatint Initial value to use for tau in tau-leaping algorithm
+#' @param ncrit Critical size for modified tau-leaping algorithm; if the population of a compartment is lower than this number a single step algorithm is used until the population gets above the critical size.
+#' @return Vector containing values of S, I, and W at the end of the simulation interval 
+#' @export
+inhomoModPoissonTLforSIWR <- function(startState, popSize, Wmax, startTime, intervalLength, parameters, alphas, allbreaks, deltatint, ncrit) {
+    .Call('bayessir_inhomoModPoissonTLforSIWR', PACKAGE = 'bayessir', startState, popSize, Wmax, startTime, intervalLength, parameters, alphas, allbreaks, deltatint, ncrit)
+}
+
+#' Modified homogeneous Poisson tau-leaping algorithm for SIWR model
+#' 
+#' Modified Poisson tau-leaping algorithm. Uses a tau-leaping algorithm to simulate S, I, W, and R forward in time when value of environmental force of infection remains constant
+#' @param startState Integer vector of size three containing the initial values for S, I, and W
+#' @param popSize Population size
+#' @param startTime Start time of simulation
+#' @param intervalLength Length of simulation interval 
+#' @param parameters Numeric vector of size six containing the current values of the infectious contact rate, betaW, the recovery rate, the rate at which immunity is lost, kappa, and eta
+#' @param alpha The value of the time-varying environmental force of infection
+#' @param deltatint Initial value to use for tau in tau-leaping algorithm
+#' @param ncrit Critical number
+#' @return Vector containing values of S, I, and W at the end of the simulation interval 
+#' @export
+ModPoissonTLforSIWR <- function(startState, popSize, Wmax, startTime, intervalLength, parameters, alpha, deltatint, ncrit) {
+    .Call('bayessir_ModPoissonTLforSIWR', PACKAGE = 'bayessir', startState, popSize, Wmax, startTime, intervalLength, parameters, alpha, deltatint, ncrit)
+}
+
 #' Sequential Monte Carlo algorithm
 #' 
 #' 
@@ -97,9 +155,43 @@ ModPoissonTL <- function(startState, popSize, startTime, intervalLength, paramet
 #' @param reportingRate Probability of infected individuals seeking treatment
 #' @param deltatval Initial value to use for tau in tau-leaping algorithm
 #' @param ncrit Critical size for modified tau-leaping algorithm; if the population of a compartment is lower than this number a single step algorithm is used until the population gets above the critical size.
+#' @param UseGill boolian; if 1, uses the gillespie algorithm. If 0, uses tau-leaping algorithm
 #' @return log-likelihood and estimate of last state
 #' @export
-SMCwithModPossionTL <- function(observedCounts, observedTimes, parameters, alphaBreaks, startMeans, nparticles, popSize, reportingRate, deltatval, ncrit) {
-    .Call('bayessir_SMCwithModPossionTL', PACKAGE = 'bayessir', observedCounts, observedTimes, parameters, alphaBreaks, startMeans, nparticles, popSize, reportingRate, deltatval, ncrit)
+SMCwithModPossionTL <- function(observedCounts, observedTimes, parameters, alphaBreaks, startMeans, nparticles, popSize, reportingRate, deltatval, ncrit, UseGill, UseSIWR) {
+    .Call('bayessir_SMCwithModPossionTL', PACKAGE = 'bayessir', observedCounts, observedTimes, parameters, alphaBreaks, startMeans, nparticles, popSize, reportingRate, deltatval, ncrit, UseGill, UseSIWR)
+}
+
+#' Sequential Monte Carlo algorithm for SIWR 
+#' 
+#' 
+#' @param observedCounts Integer vector of observed counts
+#' @param observedTimes Numeric vector of observation times
+#' @param parameters Numeric vector of size seven containing the current values of the infectious contact rate, the recovery rate, the rate at which immunity is lost, and the powers
+#' @param alphaBreaks List containing the time-varying environmental force of infection and the times at which the rate changes, broken up by simulation intervals
+#' @param startMeans Numeric vector of size two containing the means of initial distributions for the numbers of susceptible and infected individuals respectively
+#' @param nparticles Number of particles 
+#' @param popSize Population size
+#' @param reportingRate Probability of infected individuals seeking treatment
+#' @param deltatval Initial value to use for tau in tau-leaping algorithm
+#' @param ncrit Critical size for modified tau-leaping algorithm; if the population of a compartment is lower than this number a single step algorithm is used until the population gets above the critical size.
+#' @param UseGill boolian; if 1, uses the gillespie algorithm. If 0, uses tau-leaping algorithm
+#' @param maxWval Upper bound for W compartment. If 0, no bounding.
+#' @return log-likelihood and estimate of last state
+#' @export
+SMCforSIWR <- function(observedCounts, observedTimes, parameters, alphaBreaks, startMeans, nparticles, popSize, reportingRate, deltatval, ncrit, UseGill, maxWval) {
+    .Call('bayessir_SMCforSIWR', PACKAGE = 'bayessir', observedCounts, observedTimes, parameters, alphaBreaks, startMeans, nparticles, popSize, reportingRate, deltatval, ncrit, UseGill, maxWval)
+}
+
+postPredSampleSIRS <- function(observedTimes, parameters, alphaBreaks, startMeans, popSize, reportingRate) {
+    .Call('bayessir_postPredSampleSIRS', PACKAGE = 'bayessir', observedTimes, parameters, alphaBreaks, startMeans, popSize, reportingRate)
+}
+
+postPredSampleSIRSwithTL <- function(observedTimes, parameters, alphaBreaks, startMeans, popSize, reportingRate, deltatval, ncrit) {
+    .Call('bayessir_postPredSampleSIRSwithTL', PACKAGE = 'bayessir', observedTimes, parameters, alphaBreaks, startMeans, popSize, reportingRate, deltatval, ncrit)
+}
+
+postPredSampleSIWR <- function(observedTimes, parameters, alphaBreaks, startMeans, popSize, maxWval, reportingRate) {
+    .Call('bayessir_postPredSampleSIWR', PACKAGE = 'bayessir', observedTimes, parameters, alphaBreaks, startMeans, popSize, maxWval, reportingRate)
 }
 

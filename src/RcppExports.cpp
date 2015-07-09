@@ -21,6 +21,22 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// simInitSIWR
+IntegerMatrix simInitSIWR(int n, NumericVector startState);
+RcppExport SEXP bayessir_simInitSIWR(SEXP nSEXP, SEXP startStateSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< int >::type n(nSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type startState(startStateSEXP );
+        IntegerMatrix __result = simInitSIWR(n, startState);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // dataLik
 double dataLik(int infected, int observed, double repRate, bool givelog);
 RcppExport SEXP bayessir_dataLik(SEXP infectedSEXP, SEXP observedSEXP, SEXP repRateSEXP, SEXP givelogSEXP) {
@@ -54,6 +70,26 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// SIRSGillespie
+IntegerVector SIRSGillespie(IntegerVector startState, int popSize, double startTime, double intervalLength, NumericVector parameters, double alphas);
+RcppExport SEXP bayessir_SIRSGillespie(SEXP startStateSEXP, SEXP popSizeSEXP, SEXP startTimeSEXP, SEXP intervalLengthSEXP, SEXP parametersSEXP, SEXP alphasSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< IntegerVector >::type startState(startStateSEXP );
+        Rcpp::traits::input_parameter< int >::type popSize(popSizeSEXP );
+        Rcpp::traits::input_parameter< double >::type startTime(startTimeSEXP );
+        Rcpp::traits::input_parameter< double >::type intervalLength(intervalLengthSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type parameters(parametersSEXP );
+        Rcpp::traits::input_parameter< double >::type alphas(alphasSEXP );
+        IntegerVector __result = SIRSGillespie(startState, popSize, startTime, intervalLength, parameters, alphas);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // inhomoSIRSGillespie
 IntegerVector inhomoSIRSGillespie(IntegerVector startState, int popSize, double startTime, double intervalLength, NumericVector parameters, NumericVector alphas, NumericVector allbreaks);
 RcppExport SEXP bayessir_inhomoSIRSGillespie(SEXP startStateSEXP, SEXP popSizeSEXP, SEXP startTimeSEXP, SEXP intervalLengthSEXP, SEXP parametersSEXP, SEXP alphasSEXP, SEXP allbreaksSEXP) {
@@ -69,6 +105,49 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< NumericVector >::type alphas(alphasSEXP );
         Rcpp::traits::input_parameter< NumericVector >::type allbreaks(allbreaksSEXP );
         IntegerVector __result = inhomoSIRSGillespie(startState, popSize, startTime, intervalLength, parameters, alphas, allbreaks);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// SIWRGillespie
+IntegerVector SIWRGillespie(IntegerVector startState, int popSize, int Wmax, double startTime, double intervalLength, NumericVector parameters, double alphas);
+RcppExport SEXP bayessir_SIWRGillespie(SEXP startStateSEXP, SEXP popSizeSEXP, SEXP WmaxSEXP, SEXP startTimeSEXP, SEXP intervalLengthSEXP, SEXP parametersSEXP, SEXP alphasSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< IntegerVector >::type startState(startStateSEXP );
+        Rcpp::traits::input_parameter< int >::type popSize(popSizeSEXP );
+        Rcpp::traits::input_parameter< int >::type Wmax(WmaxSEXP );
+        Rcpp::traits::input_parameter< double >::type startTime(startTimeSEXP );
+        Rcpp::traits::input_parameter< double >::type intervalLength(intervalLengthSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type parameters(parametersSEXP );
+        Rcpp::traits::input_parameter< double >::type alphas(alphasSEXP );
+        IntegerVector __result = SIWRGillespie(startState, popSize, Wmax, startTime, intervalLength, parameters, alphas);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// inhomoSIWRSGillespie
+IntegerVector inhomoSIWRSGillespie(IntegerVector startState, int popSize, int Wmax, double startTime, double intervalLength, NumericVector parameters, NumericVector alphas, NumericVector allbreaks);
+RcppExport SEXP bayessir_inhomoSIWRSGillespie(SEXP startStateSEXP, SEXP popSizeSEXP, SEXP WmaxSEXP, SEXP startTimeSEXP, SEXP intervalLengthSEXP, SEXP parametersSEXP, SEXP alphasSEXP, SEXP allbreaksSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< IntegerVector >::type startState(startStateSEXP );
+        Rcpp::traits::input_parameter< int >::type popSize(popSizeSEXP );
+        Rcpp::traits::input_parameter< int >::type Wmax(WmaxSEXP );
+        Rcpp::traits::input_parameter< double >::type startTime(startTimeSEXP );
+        Rcpp::traits::input_parameter< double >::type intervalLength(intervalLengthSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type parameters(parametersSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type alphas(alphasSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type allbreaks(allbreaksSEXP );
+        IntegerVector __result = inhomoSIWRSGillespie(startState, popSize, Wmax, startTime, intervalLength, parameters, alphas, allbreaks);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -120,9 +199,56 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// inhomoModPoissonTLforSIWR
+IntegerVector inhomoModPoissonTLforSIWR(IntegerVector startState, int popSize, int Wmax, double startTime, double intervalLength, NumericVector parameters, NumericVector alphas, NumericVector allbreaks, double deltatint, int ncrit);
+RcppExport SEXP bayessir_inhomoModPoissonTLforSIWR(SEXP startStateSEXP, SEXP popSizeSEXP, SEXP WmaxSEXP, SEXP startTimeSEXP, SEXP intervalLengthSEXP, SEXP parametersSEXP, SEXP alphasSEXP, SEXP allbreaksSEXP, SEXP deltatintSEXP, SEXP ncritSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< IntegerVector >::type startState(startStateSEXP );
+        Rcpp::traits::input_parameter< int >::type popSize(popSizeSEXP );
+        Rcpp::traits::input_parameter< int >::type Wmax(WmaxSEXP );
+        Rcpp::traits::input_parameter< double >::type startTime(startTimeSEXP );
+        Rcpp::traits::input_parameter< double >::type intervalLength(intervalLengthSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type parameters(parametersSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type alphas(alphasSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type allbreaks(allbreaksSEXP );
+        Rcpp::traits::input_parameter< double >::type deltatint(deltatintSEXP );
+        Rcpp::traits::input_parameter< int >::type ncrit(ncritSEXP );
+        IntegerVector __result = inhomoModPoissonTLforSIWR(startState, popSize, Wmax, startTime, intervalLength, parameters, alphas, allbreaks, deltatint, ncrit);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// ModPoissonTLforSIWR
+IntegerVector ModPoissonTLforSIWR(IntegerVector startState, int popSize, int Wmax, double startTime, double intervalLength, NumericVector parameters, double alpha, double deltatint, int ncrit);
+RcppExport SEXP bayessir_ModPoissonTLforSIWR(SEXP startStateSEXP, SEXP popSizeSEXP, SEXP WmaxSEXP, SEXP startTimeSEXP, SEXP intervalLengthSEXP, SEXP parametersSEXP, SEXP alphaSEXP, SEXP deltatintSEXP, SEXP ncritSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< IntegerVector >::type startState(startStateSEXP );
+        Rcpp::traits::input_parameter< int >::type popSize(popSizeSEXP );
+        Rcpp::traits::input_parameter< int >::type Wmax(WmaxSEXP );
+        Rcpp::traits::input_parameter< double >::type startTime(startTimeSEXP );
+        Rcpp::traits::input_parameter< double >::type intervalLength(intervalLengthSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type parameters(parametersSEXP );
+        Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP );
+        Rcpp::traits::input_parameter< double >::type deltatint(deltatintSEXP );
+        Rcpp::traits::input_parameter< int >::type ncrit(ncritSEXP );
+        IntegerVector __result = ModPoissonTLforSIWR(startState, popSize, Wmax, startTime, intervalLength, parameters, alpha, deltatint, ncrit);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // SMCwithModPossionTL
-List SMCwithModPossionTL(IntegerVector observedCounts, NumericVector observedTimes, NumericVector parameters, List alphaBreaks, NumericVector startMeans, int nparticles, int popSize, double reportingRate, double deltatval, int ncrit);
-RcppExport SEXP bayessir_SMCwithModPossionTL(SEXP observedCountsSEXP, SEXP observedTimesSEXP, SEXP parametersSEXP, SEXP alphaBreaksSEXP, SEXP startMeansSEXP, SEXP nparticlesSEXP, SEXP popSizeSEXP, SEXP reportingRateSEXP, SEXP deltatvalSEXP, SEXP ncritSEXP) {
+List SMCwithModPossionTL(IntegerVector observedCounts, NumericVector observedTimes, NumericVector parameters, List alphaBreaks, NumericVector startMeans, int nparticles, int popSize, double reportingRate, double deltatval, int ncrit, bool UseGill, bool UseSIWR);
+RcppExport SEXP bayessir_SMCwithModPossionTL(SEXP observedCountsSEXP, SEXP observedTimesSEXP, SEXP parametersSEXP, SEXP alphaBreaksSEXP, SEXP startMeansSEXP, SEXP nparticlesSEXP, SEXP popSizeSEXP, SEXP reportingRateSEXP, SEXP deltatvalSEXP, SEXP ncritSEXP, SEXP UseGillSEXP, SEXP UseSIWRSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -137,7 +263,98 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< double >::type reportingRate(reportingRateSEXP );
         Rcpp::traits::input_parameter< double >::type deltatval(deltatvalSEXP );
         Rcpp::traits::input_parameter< int >::type ncrit(ncritSEXP );
-        List __result = SMCwithModPossionTL(observedCounts, observedTimes, parameters, alphaBreaks, startMeans, nparticles, popSize, reportingRate, deltatval, ncrit);
+        Rcpp::traits::input_parameter< bool >::type UseGill(UseGillSEXP );
+        Rcpp::traits::input_parameter< bool >::type UseSIWR(UseSIWRSEXP );
+        List __result = SMCwithModPossionTL(observedCounts, observedTimes, parameters, alphaBreaks, startMeans, nparticles, popSize, reportingRate, deltatval, ncrit, UseGill, UseSIWR);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// SMCforSIWR
+List SMCforSIWR(IntegerVector observedCounts, NumericVector observedTimes, NumericVector parameters, List alphaBreaks, NumericVector startMeans, int nparticles, int popSize, double reportingRate, double deltatval, int ncrit, bool UseGill, int maxWval);
+RcppExport SEXP bayessir_SMCforSIWR(SEXP observedCountsSEXP, SEXP observedTimesSEXP, SEXP parametersSEXP, SEXP alphaBreaksSEXP, SEXP startMeansSEXP, SEXP nparticlesSEXP, SEXP popSizeSEXP, SEXP reportingRateSEXP, SEXP deltatvalSEXP, SEXP ncritSEXP, SEXP UseGillSEXP, SEXP maxWvalSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< IntegerVector >::type observedCounts(observedCountsSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type observedTimes(observedTimesSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type parameters(parametersSEXP );
+        Rcpp::traits::input_parameter< List >::type alphaBreaks(alphaBreaksSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type startMeans(startMeansSEXP );
+        Rcpp::traits::input_parameter< int >::type nparticles(nparticlesSEXP );
+        Rcpp::traits::input_parameter< int >::type popSize(popSizeSEXP );
+        Rcpp::traits::input_parameter< double >::type reportingRate(reportingRateSEXP );
+        Rcpp::traits::input_parameter< double >::type deltatval(deltatvalSEXP );
+        Rcpp::traits::input_parameter< int >::type ncrit(ncritSEXP );
+        Rcpp::traits::input_parameter< bool >::type UseGill(UseGillSEXP );
+        Rcpp::traits::input_parameter< int >::type maxWval(maxWvalSEXP );
+        List __result = SMCforSIWR(observedCounts, observedTimes, parameters, alphaBreaks, startMeans, nparticles, popSize, reportingRate, deltatval, ncrit, UseGill, maxWval);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// postPredSampleSIRS
+List postPredSampleSIRS(NumericVector observedTimes, NumericVector parameters, List alphaBreaks, NumericVector startMeans, int popSize, double reportingRate);
+RcppExport SEXP bayessir_postPredSampleSIRS(SEXP observedTimesSEXP, SEXP parametersSEXP, SEXP alphaBreaksSEXP, SEXP startMeansSEXP, SEXP popSizeSEXP, SEXP reportingRateSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< NumericVector >::type observedTimes(observedTimesSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type parameters(parametersSEXP );
+        Rcpp::traits::input_parameter< List >::type alphaBreaks(alphaBreaksSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type startMeans(startMeansSEXP );
+        Rcpp::traits::input_parameter< int >::type popSize(popSizeSEXP );
+        Rcpp::traits::input_parameter< double >::type reportingRate(reportingRateSEXP );
+        List __result = postPredSampleSIRS(observedTimes, parameters, alphaBreaks, startMeans, popSize, reportingRate);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// postPredSampleSIRSwithTL
+List postPredSampleSIRSwithTL(NumericVector observedTimes, NumericVector parameters, List alphaBreaks, NumericVector startMeans, int popSize, double reportingRate, double deltatval, int ncrit);
+RcppExport SEXP bayessir_postPredSampleSIRSwithTL(SEXP observedTimesSEXP, SEXP parametersSEXP, SEXP alphaBreaksSEXP, SEXP startMeansSEXP, SEXP popSizeSEXP, SEXP reportingRateSEXP, SEXP deltatvalSEXP, SEXP ncritSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< NumericVector >::type observedTimes(observedTimesSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type parameters(parametersSEXP );
+        Rcpp::traits::input_parameter< List >::type alphaBreaks(alphaBreaksSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type startMeans(startMeansSEXP );
+        Rcpp::traits::input_parameter< int >::type popSize(popSizeSEXP );
+        Rcpp::traits::input_parameter< double >::type reportingRate(reportingRateSEXP );
+        Rcpp::traits::input_parameter< double >::type deltatval(deltatvalSEXP );
+        Rcpp::traits::input_parameter< int >::type ncrit(ncritSEXP );
+        List __result = postPredSampleSIRSwithTL(observedTimes, parameters, alphaBreaks, startMeans, popSize, reportingRate, deltatval, ncrit);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// postPredSampleSIWR
+List postPredSampleSIWR(NumericVector observedTimes, NumericVector parameters, List alphaBreaks, NumericVector startMeans, int popSize, int maxWval, double reportingRate);
+RcppExport SEXP bayessir_postPredSampleSIWR(SEXP observedTimesSEXP, SEXP parametersSEXP, SEXP alphaBreaksSEXP, SEXP startMeansSEXP, SEXP popSizeSEXP, SEXP maxWvalSEXP, SEXP reportingRateSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< NumericVector >::type observedTimes(observedTimesSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type parameters(parametersSEXP );
+        Rcpp::traits::input_parameter< List >::type alphaBreaks(alphaBreaksSEXP );
+        Rcpp::traits::input_parameter< NumericVector >::type startMeans(startMeansSEXP );
+        Rcpp::traits::input_parameter< int >::type popSize(popSizeSEXP );
+        Rcpp::traits::input_parameter< int >::type maxWval(maxWvalSEXP );
+        Rcpp::traits::input_parameter< double >::type reportingRate(reportingRateSEXP );
+        List __result = postPredSampleSIWR(observedTimes, parameters, alphaBreaks, startMeans, popSize, maxWval, reportingRate);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
